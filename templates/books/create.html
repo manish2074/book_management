@@ -1,0 +1,27 @@
+
+
+
+{% extends 'partials/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    
+{% comment %} 
+This is the template that is rendered when the user wants to create 
+the Book
+{% endcomment %}
+<div class="col-sm-6 offset-sm-4 text-center">
+<div class="row">
+    <div class="col-md-6">
+ <div class="info">
+        Create Book
+    </div> 
+<form method="POST" enctype="multipart/form-data">
+<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+{{ form|crispy }}
+<button type="submit" class="btn btn-dark">Create News</button>
+</form>
+</div>
+</div>
+</div>
+<br>
+{% endblock content %}

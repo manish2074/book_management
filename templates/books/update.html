@@ -1,0 +1,35 @@
+
+{% extends 'partials/base.html' %}
+<!-- This is the template that is rendered when the user wants to update 
+the Book -->
+{% load crispy_forms_tags %}
+{% load static %}
+{% block content %}
+{% if messages %}
+  <ul class="messages">
+    {% for message in messages %}
+    <li class="alert alert-{{message.tags}}">
+    <button type='button' class='close' data-dismiss='alert' aria-label='Close'><span></span aria-hidden='true'></button>
+    <strong>{{ message }}</strong>
+    </li>
+    {% endfor %}
+  </ul>
+{% endif %}
+<div class="col-sm-6 offset-sm-4 text-center">
+<div class="row">
+    <div class="col-md-6">
+<div class="info">
+        Update Books
+    </div>         
+<form method="POST" enctype="multipart/form-data">
+<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+<img class="rounded-circle" src="/media/{{form.image.value}}" height="100px" width="150px">
+{{ form|crispy }}
+
+<button type="submit" class="btn btn-dark">Update Books</button>
+</div>
+</div>
+</div>
+</form>
+<br>
+{% endblock content %}

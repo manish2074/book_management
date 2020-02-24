@@ -1,0 +1,54 @@
+
+{% extends 'partials/base.html' %}
+{% comment %}  
+This is the main template. It is the list of the books
+After 4 books in a page the book is paginated to another page
+{% endcomment %}
+{% block content %}
+
+<br>
+&nbsp;
+            {% if request.user.is_authenticated %}
+            <a class="btn btn-primary" role="button" data-toggle="collapse" href="{% url 'create_books' %}" aria-expanded="false" aria-controls="collapseExample">
+            Create Books
+            </a> 
+            &nbsp;&nbsp;
+            <a class="btn btn-primary" role="button" data-toggle="collapse" href="{% url 'logout' %}" aria-expanded="false" aria-controls="collapseExample">
+            Logout
+            </a>    
+                {% else %}
+            <a class="btn btn-primary" role="button" data-toggle="collapse" href="{% url 'create_books' %}" aria-expanded="false" aria-controls="collapseExample">
+            Create Books
+            </a> 
+            <a class="btn btn-primary" role="button" data-toggle="collapse" href="{% url 'login' %}" aria-expanded="false" aria-controls="collapseExample">
+            Login
+            </a>
+
+            {% endif %}
+        <br>
+        <br>
+
+    {% for books in books %}
+     <div class="book">
+        <div class="icon">
+            <img src="{{books.image.url}}" alt="" />
+        </div>
+        <a href='{{books.get_absolute_url}}'>
+            <h2>
+                {{books.name|title}}
+            </h2> 
+            </a>   
+            <p>{{books.about|truncatechars:40}}</p>
+            <h4>Language:</h4>
+            {% for tag in books.language.all %}
+            {{tag.name}} &nbsp;
+            {% if not forloop.last %}
+            {% endif %}
+            {% endfor %}
+    </div>
+    {% endfor %}  
+    {% endblock content %}
+
+    {% block pagination %}
+    {% include "partials/pagination.html" with page=books %}
+    {% endblock pagination %}

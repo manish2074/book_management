@@ -1,0 +1,33 @@
+
+{% extends 'partials/base.html' %}
+{% comment %} 
+This is the template that is rendered when the user wants to read  
+the Book
+{% endcomment %}
+{% block content %}
+
+    <br>
+    <img src="{{books.image.url}}" class="center"> 
+    <br><br>
+    <h2 class="uppercase">{{books.name}}</h2>
+    <br>
+    <h3 class="capitalize">BY: {{books.author.first_name|title}} {{books.author.last_name|title}}</h3>
+
+    
+    <br><br>
+    <div class="text">
+    
+        {{books.about|linebreaksbr}}
+    
+    </div>
+    <br>
+    <div class='button'>
+    {% comment %} This condition allows only logged in user to update the books.
+    It is done by hiding the button to other user except the logged in author {% endcomment %}
+    {% if request.user.is_authenticated and request.user == books.author %}
+              <a href="{{ news.get_absolute_url }}update/"> <button class="btn btn-primary">Update</button> </a> &nbsp;
+              {% include "partials/delete_modal.html" %}
+              {% endif %}
+    </div>
+    <br>
+{% endblock content %}
