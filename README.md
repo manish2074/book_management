@@ -11,10 +11,11 @@
 ### Usage
     
 *To use this code on Windows 10 device you should add a following code to run the async task*
+
 > celery -A <project_name> worker -l info -P gevent
+>
 *The use of dotenv is to store the info of users in environment variable.In order to use it add following code into settings.py.*
 *Store your variable in .env file*
-
 >from dotenv import load_dotenv,find_dotenv
 >load_dotenv()
 
