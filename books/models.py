@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.shortcuts import reverse
+from django.core.validators import FileExtensionValidator
 from django.utils.translation import gettext_lazy as _
 
 # This is a User model that which inherits from AbstractUser
@@ -29,11 +30,15 @@ class Language(models.Model):
         return self.name
 
 class Book(models.Model):
+    GENERE=(("0","Romantic"),("1","Horror"),("2","Comedy"))
     name=models.CharField(max_length=200) 
     about =models.TextField()
+    count= models.IntegerField(default=0)
     image = models.ImageField(upload_to=upload_image)  
+    book_pdf = models.FileField(upload_to=upload_image,validators=[FileExtensionValidator(['pdf'])])
     language = models.ManyToManyField(Language,related_name='book') 
     author = models.ForeignKey(User,on_delete=models.PROTECT,related_name='bauthor')
+    genere= models.CharField(choices=GENERE, max_length=2)
     def __str__(self):
         return self.name  
 

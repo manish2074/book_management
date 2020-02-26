@@ -15,13 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from books.views import book_list
+from books.views import BookTemplateView
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', book_list,name='home'),
+    path('', BookTemplateView.as_view(),name='home'),
     path('books/',include('books.urls')),
 ]
 

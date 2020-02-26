@@ -1,29 +1,34 @@
 
 {% extends 'partials/base.html' %}
-{% comment %} 
-This is the template that is rendered when the user wants to read  
-the Book
-{% endcomment %}
 {% block content %}
 
-    <br>
-    <img src="{{books.image.url}}" class="center"> 
+    
     <br><br>
     <h2 class="uppercase">{{books.name}}</h2>
     <br>
     <h3 class="capitalize">BY: {{books.author.first_name|title}} {{books.author.last_name|title}}</h3>
-
-    
-    <br><br>
+    <a href="{{books.book_pdf.url}}"  target="_blank">
+    <img src="{{books.image.url}}" class="center" align='left'>
+    </a>
+    &nbsp;
+    <p style="margin-left: 300px;">
     <div class="text">
-    
         {{books.about|linebreaksbr}}
-    
     </div>
-    <br>
+    </p>
     <div class='button'>
-    {% comment %} This condition allows only logged in user to update the books.
-    It is done by hiding the button to other user except the logged in author {% endcomment %}
+        <div class="language">
+           <h3> Language:</h3>
+        </div>    
+           {% for tag in books.language.all %}
+           <div class="small_language">
+           {{tag.name}} &nbsp;
+           {% if not forloop.last %}
+           {% endif %}
+        </div>
+           {% endfor %}
+        
+        <br><br>
     {% if request.user.is_authenticated and request.user == books.author %}
               <a href="{{ news.get_absolute_url }}update/"> <button class="btn btn-primary">Update</button> </a> &nbsp;
               {% include "partials/delete_modal.html" %}

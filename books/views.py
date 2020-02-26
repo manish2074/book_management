@@ -7,7 +7,7 @@ from .forms import CreateBooksForm,UpdateBooksForm
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import DetailView,UpdateView,DeleteView,CreateView
+from django.views.generic import DetailView,UpdateView,DeleteView,CreateView,TemplateView,ListView
 from django.urls import reverse_lazy
 # Create your views here.
 
@@ -44,30 +44,57 @@ class CreateBooksView(LoginRequiredMixin,CreateView):
         print (form.errors)
         return super(CreateBooksView,self).form_invalid(form) 
 
-#This is a list of books which has been paginated
-# A page contains 4 books
 
-def book_list(request,tag_slug=None):
-    object_list=Book.objects.all()
-    paginator = Paginator(object_list,4)
-    page = request.GET.get('page')
-    try :
-        books = paginator.page(page)
-    except PageNotAnInteger as e:
-        books = paginator.page(1)
 
-    except EmptyPage:
-        books = paginator.page(paginator.num_pages)
-
-        
-    return render(request,'books/index.html',{'books':books})
+class BookTemplateView(TemplateView):
+    template_name="books/index.html"
+   
     
-#This is a simple class based detail view.
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        book=Book.objects.all()
+        
+        
+        context["latest_book"] = book.order_by("-pk") [:6]
+        context["popular_book"] = book.order_by("-count")[:6]
+       
+        return context
+    
+#This is a simple class based detail view.It counts how many time user has read about book and then place the book
+#as most popular book 
 
 class BookDetail(DetailView):
     model = Book
     template_name='books/detail.html'
     context_object_name = 'books'
+    def get_context_data(self, **kwargs):
+        book=Book.objects.all()
+        context = super().get_context_data(**kwargs)
+        context['popular_book'] = book.order_by("-count")[:6]
+        self.object.count = self.object.count + 1
+        self.object.save()
+        return context
+
+#This is the view that seperates the genere of the book
+#So, that user can get which book they want
+
+class BookCategoryView(ListView):
+    model = Book
+    ordering =['-pk']
+    context_object_name ='category_list'
+    template_name="books/category_book.html"
+    paginate_by=6
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["genere"] = self.kwargs.get('genere')
+        return context
+
+    def get_queryset(self):
+        genere = self.kwargs.get("genere")
+        genere_key = [item[0] for item in Book.GENERE if item[1] == genere][0]
+
+        return Book.objects.filter(genere=genere_key)
 
 #This is a update view for the book
 # after the book is updated, the message is being 
@@ -77,15 +104,13 @@ class BookDetail(DetailView):
 def post_update(request,pk):
     update = get_object_or_404(Book,pk=pk)
     form = UpdateBooksForm(request.POST or None ,request.FILES or None,instance=update)
-
     if request.method == 'POST':
-        if form.is_valid():
-            post = form.save(commit=False)
-            post.save() 
-            messages.success(request,'Updated successfully!')
-            update_book.delay(post.pk)
+        books = form.save(commit=False)     
+        books.save()
+        messages.success(request,'Updated successfully!')
+        update_book.delay(books.pk)
     context ={
-        'form':form
+        'form':form,
     }      
         
     return render(request,'books/update.html',context)

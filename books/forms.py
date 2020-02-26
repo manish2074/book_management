@@ -1,6 +1,6 @@
 from django import forms
 from books.models import Book,Language
-from django.forms.widgets import TextInput
+from django.forms.widgets import TextInput,FileInput
 
 '''
 These are the forms. The first one is 
@@ -14,14 +14,14 @@ user can type rather that select
 class CreateBooksForm(forms.ModelForm):
 
     languages = forms.CharField(widget=forms.TextInput)
-
+   
     class Meta:
         model = Book
-        fields = "name","languages", "about","image"
-
+        fields = "name","languages", "genere","about","image","book_pdf"
+        
 
 class UpdateBooksForm(forms.ModelForm):
+   
     class Meta:
         model = Book
-        fields = "name","about","image"
-        
+        fields = "name","language", "genere","about","image","book_pdf"

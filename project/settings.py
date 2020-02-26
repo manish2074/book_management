@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'books',
+    'books.apps.BooksConfig',
     'crispy_forms'
 ]
 
@@ -76,13 +76,23 @@ WSGI_APPLICATION = 'project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'NAME_OF_DB',
+        'USER': 'DB_USER_NAME',
+        'PASSWORD': 'DB_PASSWORD',
+        'HOST': 'localhost',
+        'PORT': 'PORT_NUMBER',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -137,8 +147,10 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 
 # RabbitMQ  is used for  the transport between the producer and consumer of messages.
+#RabbitMQ acts as a broker to help perform async task
 
 CELERY_BROKER_URL = 'amqp://localhost'
+
 CELERY_ACCEPT_CONTENT =  ['json']
 CELERY_TASK_SERIALIZER = 'json'
 

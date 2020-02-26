@@ -1,0 +1,32 @@
+
+{% extends 'partials/base.html' %}
+{% comment %} 
+This is the main template. It is the list of the books
+After 4 books in a page the book is paginated to another page {% endcomment %}
+{% block content %}
+<br>
+
+              
+<div class='col-md-12'>
+    <div class='category'>
+        <h1>{{genere}}</h1>
+        <hr>
+        <div class='container'>
+    <table>
+    <tr style="border-spacing: 10px;">
+        {% for books in category_list %}
+    <td>
+          
+        <a href="{{books.get_absolute_url}}">    
+            <img src= "{{books.image.url}}"   style="width: 150px;height:250px;" alt="Cinque Terre"> 
+                <h4>{{books.name|title}}</h4>    
+        </a> 
+  
+    </td> 
+    {% endfor %} 
+    </tr>
+    </table>
+</div>
+</div>
+</div>
+{% endblock content %}

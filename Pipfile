@@ -12,6 +12,7 @@ django-crispy-forms = "*"
 celery = "*"
 python-dotenv = "*"
 gevent = "*"
+pycopg2 = "*"
 
 [requires]
 python_version = "3.7"
