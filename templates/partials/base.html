@@ -24,7 +24,7 @@
       </li>
       {% if request.user.is_authenticated %}
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'create_books' %}">Create News</a>
+        <a class="nav-link" href="{% url 'create_books' %}">Create Books</a>
       </li>
        <li class="nav-item">
         <a class="nav-link" href="{% url 'book_category' genere='Romantic' %}">Romantic</a>
@@ -38,12 +38,15 @@
       <li class="nav-item">
         <a class="nav-link" href="{% url 'logout' %}">Logout</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'history' %}">History</a>
+      </li>      
       {% else %}
       <li class="nav-item">
         <a class="nav-link" href="{% url 'login' %}">Login</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'create_books' %}">Create News</a>
+        <a class="nav-link" href="{% url 'create_books' %}">Create Books</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="{% url 'book_category' genere='Romantic' %}">Romantic</a>

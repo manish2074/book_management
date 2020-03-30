@@ -4,6 +4,7 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pylint = "*"
 
 [packages]
 django = "==2.2.2"
@@ -12,7 +13,12 @@ django-crispy-forms = "*"
 celery = "*"
 python-dotenv = "*"
 gevent = "*"
-pycopg2 = "*"
+django-hitcount = "*"
+django-star-ratings = "*"
+google-api-python-client = "==1.4.1"
+feedparser = "*"
+django-jet = "*"
+django-cleanup = "*"
 
 [requires]
 python_version = "3.7"

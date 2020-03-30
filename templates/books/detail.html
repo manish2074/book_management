@@ -1,9 +1,15 @@
 
 {% extends 'partials/base.html' %}
 {% block content %}
+{% load hitcount_tags %}
+{% load ratings %}
+{% load static %}
 
-    
+<link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
+<script type="text/javascript" src="{% static 'star-ratings/js/dist/star-ratings.min.js' %}"></script>
+
     <br><br>
+
     <h2 class="uppercase">{{books.name}}</h2>
     <br>
     <h3 class="capitalize">BY: {{books.author.first_name|title}} {{books.author.last_name|title}}</h3>
@@ -15,6 +21,9 @@
     <div class="text">
         {{books.about|linebreaksbr}}
     </div>
+    <div>
+        &nbsp; &nbsp; &nbsp; {% ratings object %}
+        </div>
     </p>
     <div class='button'>
         <div class="language">
@@ -27,7 +36,9 @@
            {% endif %}
         </div>
            {% endfor %}
-        
+    <p>
+        Views: {% get_hit_count for books %}
+    </p>    
         <br><br>
     {% if request.user.is_authenticated and request.user == books.author %}
               <a href="{{ news.get_absolute_url }}update/"> <button class="btn btn-primary">Update</button> </a> &nbsp;
@@ -36,3 +47,5 @@
     </div>
     <br>
 {% endblock content %}
+
+

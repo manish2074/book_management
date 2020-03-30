@@ -17,10 +17,13 @@ from django.contrib import admin
 from django.urls import path,include
 from books.views import BookTemplateView
 from django.conf import settings
+from django.conf.urls import url,include as ur_include
 from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    url(r'^jet/', include('jet.urls', 'jet')),
+    url(r'^ratings/', ur_include('star_ratings.urls', namespace='ratings')),
     path('', BookTemplateView.as_view(),name='home'),
     path('books/',include('books.urls')),
 ]

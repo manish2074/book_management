@@ -1,6 +1,5 @@
 
 {% extends 'partials/base.html' %}
-
 {% block content %}
 <br>
 
@@ -24,10 +23,11 @@
 <br><br><br><br><br><br><br><br><br><br><br><br><br> 
         <div class='col-md-12'>
             <div class='category'>
-                <h1>Popular Books</h1>
+                <h1> Popular Books</h1>
+                
                 <hr>
                 <div class='container'>
-                {% for books in popular_book %}
+                {% for books in popular_books %}
                     <div class="box">
                 <a href="{{books.get_absolute_url}}">    
                     <img src= "{{books.image.url}}"   style="width: 150px;height:250px;border-radius:5px;" alt="Cinque Terre"> 
@@ -38,5 +38,25 @@
                 </div>
             </div>
         </div>     
- 
+
+        <br><br><br><br><br><br><br><br><br><br><br><br><br> 
+        <div class='col-md-12'>
+            <div class='category'>
+                <h1> Highly Rated</h1>
+                
+                <hr>
+                <div class='container'>
+                {% for books in rating_books %}
+                    <div class="box">
+                <a href="{{books.get_absolute_url}}">    
+                    <img src= "{{books.image.url}}"   style="width: 150px;height:250px;border-radius:5px;" alt="Cinque Terre"> 
+                        <h6>{{books.name|title}}</h6>    
+                </a> 
+                    </div>
+            {% endfor %} 
+                </div>
+            </div>
+        </div>     
+         
+        
 {% endblock content %} 

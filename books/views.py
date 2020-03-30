@@ -7,8 +7,14 @@ from .forms import CreateBooksForm,UpdateBooksForm
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator,EmptyPage,PageNotAnInteger
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import DetailView,UpdateView,DeleteView,CreateView,TemplateView,ListView
+from django.views.generic import DetailView,UpdateView,DeleteView,CreateView,TemplateView,ListView,View
 from django.urls import reverse_lazy
+from hitcount.views import HitCountDetailView
+from .mixins import ObjectViewMixin
+from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ObjectDoesNotExist
+
+
 # Create your views here.
 
 # This is the view to create the book.The user has to 
@@ -48,31 +54,31 @@ class CreateBooksView(LoginRequiredMixin,CreateView):
 
 class BookTemplateView(TemplateView):
     template_name="books/index.html"
-   
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         book=Book.objects.all()
         
         
         context["latest_book"] = book.order_by("-pk") [:6]
-        context["popular_book"] = book.order_by("-count")[:6]
+        context["rating_books"] = book.filter(ratings__isnull=False).order_by('-ratings__average')
+        context['popular_books'] = book.order_by('-hitcount_count_generic__hits')[:6]
        
         return context
     
 #This is a simple class based detail view.It counts how many time user has read about book and then place the book
 #as most popular book 
 
-class BookDetail(DetailView):
+class BookDetail(ObjectViewMixin,HitCountDetailView):
     model = Book
     template_name='books/detail.html'
     context_object_name = 'books'
+    count_hit = True
     def get_context_data(self, **kwargs):
         book=Book.objects.all()
         context = super().get_context_data(**kwargs)
-        context['popular_book'] = book.order_by("-count")[:6]
-        self.object.count = self.object.count + 1
         self.object.save()
+
         return context
 
 #This is the view that seperates the genere of the book
@@ -107,6 +113,7 @@ def post_update(request,pk):
     if request.method == 'POST':
         books = form.save(commit=False)     
         books.save()
+        form.save_m2m()
         messages.success(request,'Updated successfully!')
         update_book.delay(books.pk)
     context ={
@@ -124,3 +131,19 @@ def post_delete(request,pk):
     post = get_object_or_404(Book,pk=pk)
     post.delete()
     return redirect('home')
+
+from .models import History
+from django.views.generic.detail import SingleObjectMixin
+
+class HistoryList(ListView):
+    def get_queryset(self):
+        user_history = History.objects.filter(user=self.request.user)
+        return user_history   
+
+class HistoryDelete(SingleObjectMixin,View):
+    model = History
+    def get(self,request,*args,**kwargs):
+        obj = self.get_object()
+        if obj is not None:
+            obj.delete()
+        return redirect('history')
